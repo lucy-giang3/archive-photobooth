@@ -89,11 +89,29 @@ const Camera: React.FC = () => {
 
   useEffect(() => {
     if (videoRef.current) {
+      videoRef.current.onloadedmetadata = () => {
+        const videoWidth = videoRef.current.videoWidth;
+        const videoHeight = videoRef.current.videoHeight;
+        const containerWidth = videoRef.current.clientWidth;
+        const containerHeight = videoRef.current.clientHeight;
+
+        const scaleW = containerWidth / videoWidth;
+        const scaleH = containerHeight / videoHeight;
+        const scale = Math.max(scaleW, scaleH);
+
+        videoRef.current.style.transform = `scale(${scale})`;
+      };
+    }
+  }, []);
+  /** 
+  useEffect(() => {
+    if (videoRef.current) {
       const aspectRatio =
         videoRef.current.videoWidth / videoRef.current.videoHeight;
       setVideoAspectRatio(aspectRatio);
     }
   }, [videoRef]);
+  */
 
   const startCountdown = () => {
     setIsCapturing(true);
