@@ -90,19 +90,28 @@ const Camera: React.FC = () => {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.onloadedmetadata = () => {
-        const videoWidth = videoRef.current.videoWidth;
-        const videoHeight = videoRef.current.videoHeight;
-        const containerWidth = videoRef.current.clientWidth;
-        const containerHeight = videoRef.current.clientHeight;
+        const videoWidth = videoRef.current?.videoWidth ?? 0;
+        const videoHeight = videoRef.current?.videoHeight ?? 0;
+        const containerWidth = videoRef.current?.clientWidth ?? 0;
+        const containerHeight = videoRef.current?.clientHeight ?? 0;
+
+        if (videoWidth === 0 || videoHeight === 0) return;
+
+        const aspectRatio = videoWidth / videoHeight;
+        setVideoAspectRatio(aspectRatio);
 
         const scaleW = containerWidth / videoWidth;
         const scaleH = containerHeight / videoHeight;
         const scale = Math.max(scaleW, scaleH);
 
-        videoRef.current.style.transform = `scale(${scale})`;
+        if (videoRef.current) {
+          videoRef.current.style.transform = `scale(${scale})`;
+          videoRef.current.style.objectFit = "cover";
+        }
       };
     }
-  }, []);
+  }, [videoRef]);
+
   /** 
   useEffect(() => {
     if (videoRef.current) {
