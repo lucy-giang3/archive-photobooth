@@ -20,7 +20,9 @@ const App: React.FC = () => {
       </div>
 
       {/* Author Text */}
-      <div className="mt-4 mb-6 text-sm text-gray-400">1github/lucy-giang3</div>
+      <div className="mt-4 mb-6 text-sm text-gray-400">
+        12github/lucy-giang3
+      </div>
     </div>
   );
 };
