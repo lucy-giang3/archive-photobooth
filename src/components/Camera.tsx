@@ -9,7 +9,6 @@ const Camera: React.FC = () => {
   const [capturedCount, setCapturedCount] = useState<number>(0);
   const [showCameraFeed, setShowCameraFeed] = useState<boolean>(true);
   const [flash, setFlash] = useState<boolean>(false);
-  const [videoAspectRatio, setVideoAspectRatio] = useState<number>(16 / 9); // Default 16:9 aspect ratio
   const frameImage = "./assets/frame.png";
 
   useEffect(() => {
@@ -38,25 +37,40 @@ const Camera: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      const aspectRatio =
-        videoRef.current.videoWidth / videoRef.current.videoHeight;
-      setVideoAspectRatio(aspectRatio);
+  const stopCamera = () => {
+    if (videoRef.current && videoRef.current.srcObject) {
+      const stream = videoRef.current.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+      videoRef.current.srcObject = null;
     }
-  }, [videoRef]);
+  };
+
+  useEffect(() => {
+    if (isCapturing && countdown > 0) {
+      const timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (countdown === 0 && isCapturing) {
+      capturePhoto();
+      if (capturedCount < 3) {
+        setCountdown(5);
+        setCapturedCount((prev) => prev + 1);
+      } else {
+        setIsCapturing(false);
+        setShowCameraFeed(false);
+        stopCamera();
+      }
+    }
+  }, [isCapturing, countdown, capturedCount]);
 
   const capturePhoto = () => {
     if (videoRef.current && canvasRef.current) {
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
       if (context) {
-        const videoWidth = videoRef.current.videoWidth;
-        const videoHeight = videoRef.current.videoHeight;
-
-        // Maintain aspect ratio by adjusting canvas size
-        canvas.width = videoWidth;
-        canvas.height = videoHeight;
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
 
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 
@@ -67,17 +81,9 @@ const Camera: React.FC = () => {
         setTimeout(() => {
           setFlash(false);
         }, 100);
-
-        setCapturedCount((prevCount) => prevCount + 1);
       }
     }
   };
-
-  useEffect(() => {
-    if (countdown === 0 && isCapturing) {
-      capturePhoto();
-    }
-  }, [countdown, isCapturing]);
 
   const startCountdown = () => {
     setIsCapturing(true);
@@ -97,7 +103,6 @@ const Camera: React.FC = () => {
         frame.src = frameImage;
 
         frame.onload = () => {
-          // Set the canvas size to match the frame
           canvas.width = frame.width;
           canvas.height = frame.height;
 
@@ -116,7 +121,6 @@ const Camera: React.FC = () => {
             img.src = photo;
 
             img.onload = () => {
-              // Scale the image to match the aspect ratio of the frame
               context.drawImage(img, x, y, photoWidth, photoHeight);
 
               if (index === photos.length - 1) {
@@ -133,22 +137,11 @@ const Camera: React.FC = () => {
                 link.href = finalImage;
                 link.download = "archive_photo.png";
                 link.click();
-
-                // Stop the camera after photos are finished
-                stopCamera();
               }
             };
           });
         };
       }
-    }
-  };
-
-  const stopCamera = () => {
-    if (videoRef.current && videoRef.current.srcObject) {
-      const stream = videoRef.current.srcObject as MediaStream;
-      const tracks = stream.getTracks();
-      tracks.forEach((track) => track.stop()); // Stop each track in the stream
     }
   };
 
@@ -160,8 +153,8 @@ const Camera: React.FC = () => {
             ref={videoRef}
             autoPlay
             playsInline
-            width="100%"
-            height={`calc(100vw / ${videoAspectRatio})`} // Maintain aspect ratio of the video feed
+            width="[40%]"
+            height="[40%]"
             style={{
               border: "6px solid #dde1dd",
               borderRadius: "1px",
