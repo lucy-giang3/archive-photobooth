@@ -9,7 +9,9 @@ const Camera: React.FC = () => {
   const [capturedCount, setCapturedCount] = useState<number>(0);
   const [showCameraFeed, setShowCameraFeed] = useState<boolean>(true);
   const [flash, setFlash] = useState<boolean>(false);
+  const [videoAspectRatio, setVideoAspectRatio] = useState<number>(16 / 9);
   const frameImage = "./assets/frame.png";
+  //const frameImage = "archive-photobooth/assets/frame.png";
 
   useEffect(() => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -85,6 +87,14 @@ const Camera: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    if (videoRef.current) {
+      const aspectRatio =
+        videoRef.current.videoWidth / videoRef.current.videoHeight;
+      setVideoAspectRatio(aspectRatio);
+    }
+  }, [videoRef]);
+
   const startCountdown = () => {
     setIsCapturing(true);
     setCapturedCount(0);
@@ -146,15 +156,15 @@ const Camera: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#1d1d1d]">
+    <div className="flex justify-center items-center h-full bg-[#1d1d1d]">
       <div className="flex flex-col items-center">
         {showCameraFeed && (
           <video
             ref={videoRef}
             autoPlay
             playsInline
-            width="[40%]"
-            height="[40%]"
+            width="100%"
+            height={`calc(100vw / ${videoAspectRatio})`} // Ensure aspect ratio is maintained
             style={{
               border: "6px solid #dde1dd",
               borderRadius: "1px",
