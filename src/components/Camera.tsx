@@ -9,7 +9,7 @@ const Camera: React.FC = () => {
   const [capturedCount, setCapturedCount] = useState<number>(0);
   const [showCameraFeed, setShowCameraFeed] = useState<boolean>(true);
   const [flash, setFlash] = useState<boolean>(false);
-  const frameImage = "/assets/frame.png";
+  const frameImage = "./assets/frame.png";
 
   useEffect(() => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
