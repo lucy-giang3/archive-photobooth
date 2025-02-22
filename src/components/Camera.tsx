@@ -16,7 +16,7 @@ const Camera: React.FC = () => {
   useEffect(() => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
-        .getUserMedia({ video: { aspectRatio: 4 / 3 } })
+        .getUserMedia({ video: true })
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
@@ -169,6 +169,7 @@ const Camera: React.FC = () => {
               border: "6px solid #dde1dd",
               borderRadius: "1px",
               transform: "scaleX(-1)",
+              aspectRatio: "4 / 3",
             }}
             className="shadow-md"
           />
