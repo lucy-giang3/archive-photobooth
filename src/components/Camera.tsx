@@ -66,6 +66,7 @@ const Camera: React.FC = () => {
     }
   }, [isCapturing, countdown, capturedCount]);
 
+  /*
   const capturePhoto = () => {
     if (videoRef.current && canvasRef.current) {
       const canvas = canvasRef.current;
@@ -75,6 +76,47 @@ const Camera: React.FC = () => {
         canvas.height = videoRef.current.videoHeight;
 
         context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+        const photoUrl = canvas.toDataURL("image/png");
+        setPhotos((prevPhotos) => [...prevPhotos, photoUrl]);
+
+        setFlash(true);
+        setTimeout(() => {
+          setFlash(false);
+        }, 100);
+      }
+    }
+  };
+  */
+
+  const capturePhoto = () => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext("2d");
+      if (context) {
+        const videoWidth = videoRef.current.videoWidth;
+        const videoHeight = videoRef.current.videoHeight;
+        const containerWidth = videoRef.current.clientWidth;
+        const containerHeight = videoRef.current.clientHeight;
+
+        const scaleW = containerWidth / videoWidth;
+        const scaleH = containerHeight / videoHeight;
+        const scale = Math.max(scaleW, scaleH);
+
+        canvas.width = videoWidth * scale;
+        canvas.height = videoHeight * scale;
+
+        context.drawImage(
+          videoRef.current,
+          0,
+          0,
+          videoWidth,
+          videoHeight,
+          0,
+          0,
+          canvas.width,
+          canvas.height
+        );
 
         const photoUrl = canvas.toDataURL("image/png");
         setPhotos((prevPhotos) => [...prevPhotos, photoUrl]);
@@ -105,7 +147,7 @@ const Camera: React.FC = () => {
         const scale = Math.max(scaleW, scaleH);
 
         if (videoRef.current) {
-          videoRef.current.style.transform = `scale(${scale})`;
+          videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
           videoRef.current.style.objectFit = "cover";
         }
       };
