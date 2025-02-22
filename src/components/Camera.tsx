@@ -16,7 +16,7 @@ const Camera: React.FC = () => {
   useEffect(() => {
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video: { aspectRatio: 4 / 3 } })
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
