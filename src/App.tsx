@@ -8,7 +8,7 @@ const App: React.FC = () => {
       {/* Logo */}
       <div className="mt-6 pb-4">
         <img
-          src="archive-photobooth/assets/sitelogo.png"
+          src="./assets/sitelogo.png"
           alt="Site Logo"
           className="h-[10%] sm:h-[15%] md:h-[20%] lg:h-[25%] max-w-[90%] w-auto"
         />
