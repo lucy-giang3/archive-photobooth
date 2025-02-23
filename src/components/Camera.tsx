@@ -108,10 +108,9 @@ const Camera: React.FC = () => {
         const cropX = (videoWidth - cropWidth) / 2;
         const cropY = (videoHeight - cropHeight) / 2;
 
-        canvas.width = containerWidth;
-        canvas.height = containerHeight;
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
 
-        // crop
         context.drawImage(
           videoRef.current,
           cropX,
@@ -120,8 +119,8 @@ const Camera: React.FC = () => {
           cropHeight,
           0,
           0,
-          canvas.width,
-          canvas.height
+          cropWidth,
+          cropHeight
         );
 
         const photoUrl = canvas.toDataURL("image/png");
