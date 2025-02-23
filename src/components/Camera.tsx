@@ -113,6 +113,10 @@ const Camera: React.FC = () => {
         canvas.width = containerWidth;
         canvas.height = containerHeight;
 
+        context.save();
+        context.scale(-1, 1);
+        context.translate(-canvas.width, 0);
+
         context.drawImage(
           videoRef.current,
           cropX,
@@ -124,6 +128,8 @@ const Camera: React.FC = () => {
           containerWidth,
           containerHeight
         );
+
+        context.restore();
 
         const photoUrl = canvas.toDataURL("image/png");
         setPhotos((prevPhotos) => [...prevPhotos, photoUrl]);
