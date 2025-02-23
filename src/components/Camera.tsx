@@ -103,15 +103,21 @@ const Camera: React.FC = () => {
         const scaleH = containerHeight / videoHeight;
         const scale = Math.max(scaleW, scaleH);
 
-        canvas.width = videoWidth * scale;
-        canvas.height = videoHeight * scale;
+        const cropWidth = videoWidth / scale;
+        const cropHeight = videoHeight / scale;
+        const cropX = (videoWidth - cropWidth) / 2;
+        const cropY = (videoHeight - cropHeight) / 2;
 
+        canvas.width = containerWidth;
+        canvas.height = containerHeight;
+
+        // crop
         context.drawImage(
           videoRef.current,
-          0,
-          0,
-          videoWidth,
-          videoHeight,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight,
           0,
           0,
           canvas.width,
@@ -122,9 +128,7 @@ const Camera: React.FC = () => {
         setPhotos((prevPhotos) => [...prevPhotos, photoUrl]);
 
         setFlash(true);
-        setTimeout(() => {
-          setFlash(false);
-        }, 100);
+        setTimeout(() => setFlash(false), 100);
       }
     }
   };
