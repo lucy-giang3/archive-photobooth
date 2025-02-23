@@ -118,35 +118,24 @@ const Camera: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      if (videoRef.current) {
-        const videoWidth = videoRef.current.videoWidth;
-        const videoHeight = videoRef.current.videoHeight;
-        const containerWidth = videoRef.current.clientWidth;
-        const containerHeight = videoRef.current.clientHeight;
+    if (videoRef.current) {
+      const videoWidth = videoRef.current.videoWidth;
+      const videoHeight = videoRef.current.videoHeight;
+      const containerWidth = videoRef.current.clientWidth;
+      const containerHeight = videoRef.current.clientHeight;
 
-        if (videoWidth === 0 || videoHeight === 0) return;
+      const scale = Math.max(
+        containerWidth / videoWidth,
+        containerHeight / videoHeight
+      );
 
-        const aspectRatio = videoWidth / videoHeight;
-        setVideoAspectRatio(aspectRatio);
+      videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
+      videoRef.current.style.objectFit = "cover";
 
-        const scaleW = containerWidth / videoWidth;
-        const scaleH = containerHeight / videoHeight;
-        const scale = Math.max(scaleW, scaleH);
-
-        videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
-        videoRef.current.style.objectFit = "cover";
-      }
-    };
-
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      const aspectRatio = videoWidth / videoHeight;
+      setVideoAspectRatio(aspectRatio);
+    }
+  }, [videoRef]);
 
   const startCountdown = () => {
     setIsCapturing(true);
