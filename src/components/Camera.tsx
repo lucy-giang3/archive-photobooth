@@ -118,12 +118,12 @@ const Camera: React.FC = () => {
   };
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.onloadedmetadata = () => {
-        const videoWidth = videoRef.current?.videoWidth ?? 0;
-        const videoHeight = videoRef.current?.videoHeight ?? 0;
-        const containerWidth = videoRef.current?.clientWidth ?? 0;
-        const containerHeight = videoRef.current?.clientHeight ?? 0;
+    const handleResize = () => {
+      if (videoRef.current) {
+        const videoWidth = videoRef.current.videoWidth;
+        const videoHeight = videoRef.current.videoHeight;
+        const containerWidth = videoRef.current.clientWidth;
+        const containerHeight = videoRef.current.clientHeight;
 
         if (videoWidth === 0 || videoHeight === 0) return;
 
@@ -134,23 +134,19 @@ const Camera: React.FC = () => {
         const scaleH = containerHeight / videoHeight;
         const scale = Math.max(scaleW, scaleH);
 
-        if (videoRef.current) {
-          videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
-          videoRef.current.style.objectFit = "cover";
-        }
-      };
-    }
-  }, [videoRef]);
+        videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
+        videoRef.current.style.objectFit = "cover";
+      }
+    };
 
-  /** 
-  useEffect(() => {
-    if (videoRef.current) {
-      const aspectRatio =
-        videoRef.current.videoWidth / videoRef.current.videoHeight;
-      setVideoAspectRatio(aspectRatio);
-    }
-  }, [videoRef]);
-  */
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const startCountdown = () => {
     setIsCapturing(true);
