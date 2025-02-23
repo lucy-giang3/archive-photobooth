@@ -9,7 +9,7 @@ const Camera: React.FC = () => {
   const [capturedCount, setCapturedCount] = useState<number>(0);
   const [showCameraFeed, setShowCameraFeed] = useState<boolean>(true);
   const [flash, setFlash] = useState<boolean>(false);
-  const [videoAspectRatio, setVideoAspectRatio] = useState<number>(16 / 9);
+  // const [videoAspectRatio, setVideoAspectRatio] = useState<number>(16 / 9);
   const frameImage = "./assets/frame.png";
   // const frameImage = "archive-photobooth/assets/frame.png";
 
@@ -136,10 +136,8 @@ const Camera: React.FC = () => {
 
     window.addEventListener("resize", handleResize);
 
-    // Call the resize handler on initial load
     handleResize();
 
-    // Clean up the event listener when the component unmounts
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -212,12 +210,12 @@ const Camera: React.FC = () => {
             autoPlay
             playsInline
             width="100%"
-            height={`calc(100vw / ${videoAspectRatio})`} // Ensure aspect ratio is maintained
+            height="auto"
             style={{
               border: "6px solid #dde1dd",
               borderRadius: "1px",
               transform: "scaleX(-1)",
-              aspectRatio: "4 / 3",
+              objectFit: "cover",
             }}
             className="shadow-md"
           />
