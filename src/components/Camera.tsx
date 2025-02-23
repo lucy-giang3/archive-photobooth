@@ -9,7 +9,7 @@ const Camera: React.FC = () => {
   const [capturedCount, setCapturedCount] = useState<number>(0);
   const [showCameraFeed, setShowCameraFeed] = useState<boolean>(true);
   const [flash, setFlash] = useState<boolean>(false);
-  // const [videoAspectRatio, setVideoAspectRatio] = useState<number>(16 / 9);
+  const [videoAspectRatio, setVideoAspectRatio] = useState<number>(16 / 9);
   const frameImage = "./assets/frame.png";
   // const frameImage = "archive-photobooth/assets/frame.png";
 
@@ -118,28 +118,39 @@ const Camera: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      if (videoRef.current) {
-        const videoWidth = videoRef.current.videoWidth;
-        const videoHeight = videoRef.current.videoHeight;
-        const containerWidth = videoRef.current.clientWidth;
-        const containerHeight = videoRef.current.clientHeight;
+    if (videoRef.current) {
+      videoRef.current.onloadedmetadata = () => {
+        const videoWidth = videoRef.current?.videoWidth ?? 0;
+        const videoHeight = videoRef.current?.videoHeight ?? 0;
+        const containerWidth = videoRef.current?.clientWidth ?? 0;
+        const containerHeight = videoRef.current?.clientHeight ?? 0;
+
+        if (videoWidth === 0 || videoHeight === 0) return;
+
+        const aspectRatio = videoWidth / videoHeight;
+        setVideoAspectRatio(aspectRatio);
 
         const scaleW = containerWidth / videoWidth;
         const scaleH = containerHeight / videoHeight;
         const scale = Math.max(scaleW, scaleH);
 
-        videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
-        videoRef.current.style.objectFit = "cover";
-      }
-    };
+        if (videoRef.current) {
+          videoRef.current.style.transform = `scale(${scale}) scaleX(-1)`;
+          videoRef.current.style.objectFit = "cover";
+        }
+      };
+    }
+  }, [videoRef]);
 
-    window.addEventListener("resize", handleResize);
-
-    handleResize();
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  /** 
+  useEffect(() => {
+    if (videoRef.current) {
+      const aspectRatio =
+        videoRef.current.videoWidth / videoRef.current.videoHeight;
+      setVideoAspectRatio(aspectRatio);
+    }
+  }, [videoRef]);
+  */
 
   const startCountdown = () => {
     setIsCapturing(true);
@@ -210,12 +221,12 @@ const Camera: React.FC = () => {
             autoPlay
             playsInline
             width="100%"
-            height="auto"
+            height={`calc(100vw / ${videoAspectRatio})`} // Ensure aspect ratio is maintained
             style={{
               border: "6px solid #dde1dd",
               borderRadius: "1px",
               transform: "scaleX(-1)",
-              objectFit: "cover",
+              aspectRatio: "4 / 3",
             }}
             className="shadow-md"
           />
