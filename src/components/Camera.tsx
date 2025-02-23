@@ -93,23 +93,25 @@ const Camera: React.FC = () => {
     if (videoRef.current && canvasRef.current) {
       const canvas = canvasRef.current;
       const context = canvas.getContext("2d");
+
       if (context) {
         const videoWidth = videoRef.current.videoWidth;
         const videoHeight = videoRef.current.videoHeight;
         const containerWidth = videoRef.current.clientWidth;
         const containerHeight = videoRef.current.clientHeight;
 
-        const scaleW = containerWidth / videoWidth;
-        const scaleH = containerHeight / videoHeight;
-        const scale = Math.max(scaleW, scaleH);
+        const scale = Math.max(
+          containerWidth / videoWidth,
+          containerHeight / videoHeight
+        );
 
-        const cropWidth = videoWidth / scale;
-        const cropHeight = videoHeight / scale;
+        const cropWidth = containerWidth / scale;
+        const cropHeight = containerHeight / scale;
         const cropX = (videoWidth - cropWidth) / 2;
         const cropY = (videoHeight - cropHeight) / 2;
 
-        canvas.width = cropWidth;
-        canvas.height = cropHeight;
+        canvas.width = containerWidth;
+        canvas.height = containerHeight;
 
         context.drawImage(
           videoRef.current,
@@ -119,8 +121,8 @@ const Camera: React.FC = () => {
           cropHeight,
           0,
           0,
-          cropWidth,
-          cropHeight
+          containerWidth,
+          containerHeight
         );
 
         const photoUrl = canvas.toDataURL("image/png");
