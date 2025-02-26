@@ -1,50 +1,17 @@
-# React + TypeScript + Vite
+# Photobooth Webpage
+This project simulates a digital photobooth experience on a webpage. Users can click a button to start the process, follow the instructions, and have their photos taken. Afterward, the photos are compiled into a downloadable PDF formatted like a traditional photobooth strip. Check it out here : https://lucy-giang3.github.io/archive-photobooth/
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Features
+- Get Started Button: The user starts the photobooth experience by clicking the "Get Started" button.
+- Instructions Pop-up: After starting, a pop-up displays instructions on how to use the photobooth.
+- Camera Feed: The page activates the user’s camera and displays it on the screen.
+- Countdown: A countdown is shown before taking the photos.
+- Photo Capture: The camera takes 4 photos automatically in sequence.
+- PDF Creation: After the photos are taken, the webpage generates a PDF with the 4 photos formatted like a photobooth strip.
+- Downloadable PDF: The user can download the photobooth PDF containing their photos.
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## Tech Stack
+React: Frontend framework for building the user interface.
+TypeScript: Adds static typing to JavaScript for better development experience.
+TailwindCSS: Utility-first CSS framework for fast UI development.
+HTML5: For structuring the web page and integrating the camera functionality.
